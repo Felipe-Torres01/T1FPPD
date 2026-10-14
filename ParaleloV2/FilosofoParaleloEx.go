@@ -114,12 +114,21 @@ func main() {
 	}
 
 	slices.Sort(allTimesWaitedForFork)
-	averageTime := sumTimeToFork.Milliseconds() / int64(len(allTimesWaitedForFork))
+	averageTime := sumTimeToFork / time.Duration(len(allTimesWaitedForFork))
 	fmt.Printf("\nParalel Dinner took: %s\n\n", elapsed)
-	fmt.Printf("average time to get fork: %fms\n", averageTime)
+	fmt.Printf("average time to get fork: %s\n", averageTime)
 	fmt.Printf("longest time waiting %s\n", allTimesWaitedForFork[len(allTimesWaitedForFork)-1])
 	fmt.Printf("max num of philosophers eating at the same time: %d\n", maxNumOfPhilosophersEatingSimult)
 	fmt.Println("\n--- Tempo de Espera por Filósofo ---")
+	for _, p := range recordsFromPhilosophers {
+		var tempoTotalEspera time.Duration
+		for i := 0; i < p.roundsCounter; i++ {
+			tempoTotalEspera += p.timeWaitingFork[i]
+		}
+		fmt.Printf("Filósofo %d esperou um total de: %s\n", p.id, tempoTotalEspera)
+	}
+	fmt.Println("------------------------------------")
+	fmt.Println("\n--- philosopher's waiting time ---")
 	for _, p := range recordsFromPhilosophers {
 		var tempoTotalEspera time.Duration
 		for i := 0; i < p.roundsCounter; i++ {
